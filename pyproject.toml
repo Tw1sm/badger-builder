@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "badger-builder"
+version = "0.1.0"
+description = ""
+authors = ["Matt Creel <mcreel31@gmail.com>"]
+readme = "README.md"
+homepage = "https://github.com/tw1sm/badger-builder"
+repository = "https://github.com/tw1sm/badger-builder"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+rich = "^12.5.1"
+typer = "^0.6.1"
+jsonschema = "^4.17.3"
+openai = "^0.27.2"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.235"
+pytest = "^7.2.1"
+pre-commit = "^3.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+select = ['E', 'F']
+ignore = ['E501']
+
+[tool.poetry.scripts]
+badger-builder = "badger_builder.__main__:app"

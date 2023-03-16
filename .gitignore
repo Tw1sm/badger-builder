@@ -1,0 +1,5 @@
+*.pyc
+.pytest_cache/
+*.json
+.ruff_cache/
+.env
