@@ -89,16 +89,20 @@ def main(
 
     # set user-defined configs
     listener['host'] = bind_host
-    listener['port'] = bind_port
+    listener['port'] = str(bind_port)
     listener['sleep'] = sleep
     listener['jitter'] = jitter
     listener['ssl'] = not disable_ssl
-    listener['auth_count'] = auth_count
     listener['auth_type'] = ota
     listener['die_offline'] = die
     listener['useragent'] = get_ua_string(user_agent)
     listener['obfsleep'] = obfsleep.value
     listener['rotational_host'] = ','.join(hosts)
+
+    listener['auth_count'] = auth_count
+    listener['c2_authkeys'] = []
+    for x in range(0, auth_count):
+        listener['c2_authkeys'].append(utils.random_string(15))
 
     if proxy:
         listener['proxy'] = proxy
