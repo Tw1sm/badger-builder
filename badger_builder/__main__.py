@@ -19,29 +19,29 @@ app = typer.Typer(
 )
 
 
-@app.command(no_args_is_help=True, help='Create C4 Profiles')
+@app.command(no_args_is_help=True, help='Generate a Brute Ratel C4 Profile with AI-assistance')
 def main(
     # listener profile configurations
     jitter:         int         = typer.Option(40, '--jitter', help='Badger sleep jitter', rich_help_panel='Listener Configs'),
     sleep:          int         = typer.Option(60, '--sleep', help='Badger sleep interval', rich_help_panel='Listener Configs'),
     disable_ssl:    bool        = typer.Option(False, '--no-ssl', help='Disable listener SSL', rich_help_panel='Listener Configs'),
-    comms_port:     int         = typer.Option(None, '--comms-port', help='If set, will generate a payload profile for the listener same configs but this port', rich_help_panel='Listener Configs'),
+    comms_port:     int         = typer.Option(None, '--comms-port', help='If set, will generate a payload profile for the listener using the same configs but this port', rich_help_panel='Listener Configs'),
     bind_port:      int         = typer.Option(443, '--bind-port', help='Port the listener will bind to', rich_help_panel='Listener Configs'),
     bind_host:      str         = typer.Option(..., '--bind-host', help='Host the listener will bind to', rich_help_panel='Listener Configs'),
     hosts:          List[str]   = typer.Option(..., '--host', help='Add a rotational host for C2 communications (flag can be used multiple times)', rich_help_panel='Listener Configs'),
     response_type:  DataFormat  = typer.Option(..., '--resp-fmt', help='Data format to use for server HTTP response', rich_help_panel='Listener Configs', case_sensitive=False),
     request_type:   DataFormat  = typer.Option(..., '--req-fmt', help='Data format to use for client HTTP request', rich_help_panel='Listener Configs', case_sensitive=False),
     obfsleep:       ObfSleep    = typer.Option(..., '--obfsleep', help='Sleep obfuscation method', rich_help_panel='Listener Configs', case_sensitive=False),
-    flavor:         str         = typer.Option(..., '--flavor', help='C2 communication flavor. Used in OpenAI queries for URIs, headers, HTTP requests', rich_help_panel='Listener Configs'),
-    user_agent:     UserAgent   = typer.Option(..., '--user-agent', help='User agent to use for the listener', rich_help_panel='Listener Configs', case_sensitive=False),
+    flavor:         str         = typer.Option(..., '--flavor', help='C2 communication flavor. Used to theme OpenAI queries for URIs, headers, HTTP requests', rich_help_panel='Listener Configs'),
+    user_agent:     UserAgent   = typer.Option(..., '--user-agent', help='User-agent to use in comms to the listener', rich_help_panel='Listener Configs', case_sensitive=False),
     auth_count:     int         = typer.Option(1, '--auth-count', help='Number of authentication keys', rich_help_panel='Listener Configs'),
     ota:            bool        = typer.Option(False, '--ota', help='Enable one-time authentication', rich_help_panel='Listener Configs'),
-    die:            bool        = typer.Option(False, '--die', help='Kill the payload if internet is unavailable on lanuch', rich_help_panel='Listener Configs'),
+    die:            bool        = typer.Option(False, '--die-offline', help='Kill the payload if internet is unavailable on lanuch', rich_help_panel='Listener Configs'),
     proxy:          str         = typer.Option(None, '--proxy', help='Proxy URL for payload connections', rich_help_panel='Listener Configs'),
     
     # operator configurations
-    admins:         List[str]   = typer.Option(['admin'], '--admin', help='Add a commander admins (flag can be used multiple times)', rich_help_panel='Operator Configs'),
-    operators:      List[str]   = typer.Option(None, '--operator', help='Add a commander operators (flag can be used multiple times)', rich_help_panel='Operator Configs'),
+    admins:         List[str]   = typer.Option(['admin'], '--admin', help='Add a commander admin (flag can be used multiple times)', rich_help_panel='Operator Configs'),
+    operators:      List[str]   = typer.Option(None, '--operator', help='Add a commander operator (flag can be used multiple times)', rich_help_panel='Operator Configs'),
     
     # miscellaneous configurations
     no_autosave:    bool        = typer.Option(False, '--no-autosave', help='Disable profile autosave', rich_help_panel='Miscellaneous Configs'),
@@ -50,7 +50,7 @@ def main(
     
     # autorun configurations
     killdate:       str         = typer.Option(None, '--kill-date', help='Badger kill date. Example: "30 Sep 21 22:55 IST"', rich_help_panel='Autorun Configs'),
-    child:          str        = typer.Option(None, '--child', help='Enable child payload', rich_help_panel='Autorun Configs'),
+    child:          str        = typer.Option(None, '--child', help='Set the child process spawned during fork and run', rich_help_panel='Autorun Configs'),
     malloc:         int        = typer.Option(None, '--malloc', help=utils.MALLOC_HELP, rich_help_panel='Autorun Configs'),
     threadexec:     int        = typer.Option(None, '--threadexec', help=utils.THREADEX_HELP, rich_help_panel='Autorun Configs'),
 
