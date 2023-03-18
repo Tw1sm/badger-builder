@@ -42,4 +42,4 @@ poetry run badger-builder --help
 - [ ] Better OpenAI prompts
 - [ ] DoH listener integration
 - [ ] More prepend/append data formats
-- [ ] `autorun` actions such as setting kill date, chid, malloc/threadex settings
+- [x] `autorun` actions such as setting kill date, chid, malloc/threadex settings

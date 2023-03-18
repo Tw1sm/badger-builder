@@ -47,6 +47,12 @@ def main(
     cmd_host:       str         = typer.Option('0.0.0.0', '--cmd-host', help='Host the commander will bind to', rich_help_panel='Miscellaneous Configs'),
     cmd_port:       int         = typer.Option(8443, '--cmd-port', help='Port the commander will bind to', rich_help_panel='Miscellaneous Configs'),
     
+    # autorun configurations
+    killdate:       str         = typer.Option(None, '--kill-date', help='Badger kill date. Example: "30 Sep 21 22:55 IST"', rich_help_panel='Autorun Configs'),
+    child:          str        = typer.Option(None, '--child', help='Enable child payload', rich_help_panel='Autorun Configs'),
+    malloc:         int        = typer.Option(None, '--malloc', help=utils.MALLOC_HELP, rich_help_panel='Autorun Configs'),
+    threadexec:     int        = typer.Option(None, '--threadexec', help=utils.THREADEX_HELP, rich_help_panel='Autorun Configs'),
+
     # badger-builder options
     outfile:        Path        = typer.Option('profile.json', '--outfile', file_okay=True, writable=True, help='Output file for the profile', rich_help_panel='Badger Builder Options'),
     temperature:    float       = typer.Option(1.2, '--temp', help='Temperature for OpenAI GPT-3 queries. Between 0.0 and 2.0. Higher values cause more randomness, while lower are more focused', rich_help_panel='Badger Builder Options'),
@@ -57,6 +63,33 @@ def main(
 
     logger.info('Badger is building your profile...')
 
+    # validate autorun input first
+    autoruns = []
+    if killdate:
+        if utils.validate_date(killdate):
+            autoruns.append(f'set_killdate {killdate}')
+        else:
+            logger.error(f'Invalid killdate: {killdate}')
+            raise typer.Exit(1)
+    
+    if child:
+        autoruns.append(f'set_child: {child}')
+
+    if malloc:
+        if utils.validate_malloc(malloc):
+            autoruns.append(f'set_malloc {malloc}')
+        else:
+            logger.error(f'Invalid malloc value: {malloc}')
+            raise typer.Exit(1)
+
+    if threadexec:
+        if utils.validate_threadexec(threadexec):
+            autoruns.append(f'set_threadex {threadexec}')
+        else:
+            logger.error(f'Invalid threadexec value: {threadexec}')
+            raise typer.Exit(1)
+
+    # now we start building the profile JSON
     profile = {}
 
     # set operator configs
@@ -187,6 +220,9 @@ def main(
         # change port to comms port
         profile['payload_config']['http-custom']['port'] = comms_port
 
+
+    if len(autoruns) > 0:
+        profile['autoruns'] = autoruns
 
     # dump to file!
     with open (outfile, 'w') as f:
