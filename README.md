@@ -22,13 +22,13 @@ Tested with Brute Ratel 1.4.5
 Currently only HTTP listener profile configs are supported (no DoH support)
 
 ### Note on OpenAI Usage
-The prompts `badger-builder` sends to the OpenAI API consume [tokens](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them). Usage generally a thousand tokens (< $0.05 USD). Your OpenAI account must either be on the free trial or have setup API billing. (Check your usage and billing [here](https://platform.openai.com/account/usage))
+The prompts `badger-builder` sends to the OpenAI API consume [tokens](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them). Usage generally consumes a thousand tokens (< $0.05 USD). Your OpenAI account must either be on the free trial or have setup API billing. (Check your usage and billing [here](https://platform.openai.com/account/usage))
 
 ## Install
 `badger-builder` can be installed by cloning this repository and running `pip3 install .` and subsequently executed from PATH with `badger-builder`
 
 ## Usage
-
+![](.assets/usage.png)
 ## Examples
 
 ## Development
