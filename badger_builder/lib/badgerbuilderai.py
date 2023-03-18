@@ -15,15 +15,19 @@ class BadgerBuilderAI:
 
     def openai_query(self, query, max_tokens=500):
         openai.api_key = os.getenv('OPENAI_API_KEY')
-        response = openai.Completion.create(
-            model='text-davinci-003',
-            prompt=query,
-            temperature=self.temperature,
-            stream=False,
-            max_tokens=max_tokens,
-            n=1
-        )
-        return response.choices[0]['text'].strip()
+        try:
+            response = openai.Completion.create(
+                model='text-davinci-003',
+                prompt=query,
+                temperature=self.temperature,
+                stream=False,
+                max_tokens=max_tokens,
+                n=1
+            )
+            return response.choices[0]['text'].strip()
+        except Exception as e:
+            logger.error(f'Error querying OpenAI - {e}')
+            exit(1)
 
 
     def uri_query(self):
