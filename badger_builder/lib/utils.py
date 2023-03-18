@@ -17,6 +17,7 @@ Change thread execution technique. Options:\n
 [10] - NtQueueApcThread, NtResumeThread (Obfuscated Indirect Syscalls - x64 only\n
 [11] - NtQueueApcThread, NtAlertResumeThread (Obfuscated Indirect Syscalls - x64 only
 '''
+
 MALLOC_HELP = '''
 Change memory allocation technique. Options:\n
 [0] - VirtualAllocEx, VirtualProtectEx, WriteProcessMemory (WINAPI)\n

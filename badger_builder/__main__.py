@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 import typer
 import json
+import copy
 
 from badger_builder.logger import logger, init_logger
 from badger_builder.lib.badgerbuilderai import BadgerBuilderAI
@@ -122,7 +123,7 @@ def main(
 
     # set user-defined configs
     listener['host'] = bind_host
-    listener['port'] = str(bind_port)
+    listener['port'] = f'{bind_port}'
     listener['sleep'] = sleep
     listener['jitter'] = jitter
     listener['ssl'] = not disable_ssl
@@ -145,7 +146,7 @@ def main(
     badger_ai = BadgerBuilderAI(flavor, temperature)
     
     listener['c2_uri'] = badger_ai.uri_query()
-
+    
     # Open AI gives bad JSON frequently, so we'll be safe
     # get client-side request headers
     while True:
@@ -183,12 +184,12 @@ def main(
     body = ''
     while True:
         body = badger_ai.http_body_query(request_type.value, client_side=True)
-        if 'BadgerPlaceholder' in body and body.count('BadgerPlaceholder') == 1:
+        if 'DataBlobPlaceholder' in body and body.count('DataBlobPlaceholder') == 1:
             break
         else:
             logger.error('OpenAI returned malformed HTTP request body... retrying')
 
-    request = body.split('BadgerPlaceholder', 1)
+    request = body.split('DataBlobPlaceholder', 1)
     listener['prepend'] = request[0]
     listener['append'] = request[1]
     
@@ -196,12 +197,12 @@ def main(
     # get server-side response body
     while True:
         body = badger_ai.http_body_query(response_type.value, client_side=False)
-        if 'BadgerPlaceholder' in body and body.count('BadgerPlaceholder') == 1:
+        if 'DataBlobPlaceholder' in body and body.count('DataBlobPlaceholder') == 1:
             break
         else:
             logger.error('OpenAI returned malformed HTTP response body... retrying')
 
-    response = body.split('BadgerPlaceholder', 1)
+    response = body.split('DataBlobPlaceholder', 1)
     listener['prepend_response'] = response[0]
     listener['append_response'] = response[1]
 
@@ -215,10 +216,14 @@ def main(
         profile['payload_config'] = {}
 
         # copy listener configs to payload profile
-        profile['payload_config']['http-custom'] = listener
+        profile['payload_config']['http-custom'] = copy.deepcopy(listener)
 
         # change port to comms port
-        profile['payload_config']['http-custom']['port'] = comms_port
+        profile['payload_config']['http-custom']['port'] = f'{comms_port}'
+
+        # remove c2_authkeys list and replace with a single val from the list
+        del profile['payload_config']['http-custom']['c2_authkeys']
+        profile['payload_config']['http-custom']['c2_auth'] = listener['c2_authkeys'][0]
 
 
     if len(autoruns) > 0:
