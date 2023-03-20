@@ -217,6 +217,7 @@ def main(
 
         # copy listener configs to payload profile
         profile['payload_config']['http-custom'] = copy.deepcopy(listener)
+        profile['payload_config']['http-custom']['type'] = 'HTTP'
 
         # change port to comms port
         profile['payload_config']['http-custom']['port'] = f'{comms_port}'
