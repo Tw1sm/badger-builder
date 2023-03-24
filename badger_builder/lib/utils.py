@@ -15,7 +15,8 @@ Change thread execution technique. Options:\n
 [8]  - NtQueueApcThread, NtAlertResumeThread (NTAPI\n
 [9]  - NtCreateThreadEx (Obfuscated Indirect Syscalls - x64 only\n
 [10] - NtQueueApcThread, NtResumeThread (Obfuscated Indirect Syscalls - x64 only\n
-[11] - NtQueueApcThread, NtAlertResumeThread (Obfuscated Indirect Syscalls - x64 only
+[11] - NtQueueApcThread, NtAlertResumeThread (Obfuscated Indirect Syscalls - x64 only\n
+[12] - Remote Procedure Call
 '''
 
 MALLOC_HELP = '''
@@ -55,7 +56,7 @@ def validate_malloc(malloc):
 def validate_threadexec(threadexec):
     try:
         threadexec = int(threadexec)
-        if threadexec < 0 or threadexec > 11:
+        if threadexec < 0 or threadexec > 12:
             return False
         return True
     except ValueError:
