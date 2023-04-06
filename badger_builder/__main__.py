@@ -73,6 +73,10 @@ def main(
         else:
             logger.error(f'Invalid killdate: {killdate}')
             raise typer.Exit(1)
+        
+    if bind_port == cmd_port:
+        logger.error('Listener and commander bind ports cannot be the same')
+        raise typer.Exit(1)
     
     if child:
         autoruns.append(f'set_child: {child}')
