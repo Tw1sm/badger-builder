@@ -6,16 +6,16 @@ THREADEX_HELP = '''
 Change thread execution technique. Options:\n
 [0]  - CreateRemoteThread (WINAPI)\n
 [1]  - RtlCreateUserThread (NTAPI)\n
-[2]  - NtCreateThreadEx (NTAPI\n
-[3]  - QueueUserAPC, ResumeThread (WINAPI\n
-[4]  - QueueUserAPC, NtResumeThread (WINAPI+NTAPI\n
-[5]  - QueueUserAPC, NtAlertResumeThread (WINAPI+NTAPI\n
-[6]  - NtQueueApcThread, ResumeThread (NTAPI+WINAPI\n
-[7]  - NtQueueApcThread, NtResumeThread (NTAPI\n
-[8]  - NtQueueApcThread, NtAlertResumeThread (NTAPI\n
+[2]  - NtCreateThreadEx (NTAPI)\n
+[3]  - QueueUserAPC, ResumeThread (WINAPI)\n
+[4]  - QueueUserAPC, NtResumeThread (WINAPI+NTAPI)\n
+[5]  - QueueUserAPC, NtAlertResumeThread (WINAPI+NTAPI)\n
+[6]  - NtQueueApcThread, ResumeThread (NTAPI+WINAPI)\n
+[7]  - NtQueueApcThread, NtResumeThread (NTAPI)\n
+[8]  - NtQueueApcThread, NtAlertResumeThread (NTAPI)\n
 [9]  - NtCreateThreadEx (Obfuscated Indirect Syscalls - x64 only\n
-[10] - NtQueueApcThread, NtResumeThread (Obfuscated Indirect Syscalls - x64 only\n
-[11] - NtQueueApcThread, NtAlertResumeThread (Obfuscated Indirect Syscalls - x64 only\n
+[10] - NtQueueApcThread, NtResumeThread (Obfuscated Indirect Syscalls - x64 only)\n
+[11] - NtQueueApcThread, NtAlertResumeThread (Obfuscated Indirect Syscalls - x64 only)\n
 [12] - Remote Procedure Call
 '''
 
