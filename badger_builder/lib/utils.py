@@ -106,7 +106,7 @@ def print_traffic_profile(profile):
         if 'payload_config' in profile.keys():
             port = profile['payload_config']['http-custom']['port']
         
-        if port not in [80, 443]:
+        if port not in ['80', '443']:
             DEFAULT_CLIENT_HEADERS['Host'] += f':{port}'
 
     for header, value in profile['listeners']['http']['response_headers'].items():
