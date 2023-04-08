@@ -244,6 +244,10 @@ def main(
     
     logger.info(f'Profile saved to {outfile}')
 
+    # print HTTP traffic
+    logger.info('Printing sample HTTP traffic...')
+    utils.print_traffic_profile(profile)
+
 
 if __name__ == '__main__':
     app(prog_name='c4-profiler')
