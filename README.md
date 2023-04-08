@@ -29,6 +29,7 @@ The prompts `badger-builder` sends to the OpenAI API consume [tokens](https://he
 
 ## Usage
 Move `.env.sample` to `.env`, add your OpenAI API key and run `badger-builder create`
+
 ![](.assets/usage.png)
 
 After a profle has been generated, use `badger-builder parse` to display sample HTTP requests using the profile configs.
