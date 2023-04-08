@@ -130,7 +130,7 @@ def print_traffic_profile(profile):
     
     print()
 
-    console.print(f'HTTP/1.1 200 OK', style='blue on default', highlight=False)
+    console.print('HTTP/1.1 200 OK', style='blue on default', highlight=False)
     for header, value in DEFAULT_SERVER_HEADERS.items():
         console.print(f'{header}: {value}', style='blue on default', highlight=False)
     console.print()

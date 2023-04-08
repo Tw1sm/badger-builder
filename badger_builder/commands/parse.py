@@ -1,7 +1,6 @@
 from pathlib import Path
 import typer
 import json
-import copy
 
 from badger_builder.logger import logger, init_logger
 from badger_builder.lib import utils
