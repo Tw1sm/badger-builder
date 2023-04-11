@@ -166,7 +166,12 @@ def main(
             logger.error('OpenAI returned malformed JSON... retrying')
         else:
             break
-    
+
+    # remove user-agent if supplied by OpenAI
+    for header in listener['request_headers'].keys():
+        if header.lower() == 'user-agent':
+            del listener['request_headers'][header]
+            break
 
     # get server-side response headers
     while True:

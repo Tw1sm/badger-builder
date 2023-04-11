@@ -1,8 +1,6 @@
 import random
 from datetime import datetime
-from base64 import b64encode
 
-from badger_builder.logger import console
 
 THREADEX_HELP = '''
 Change thread execution technique. Options:\n
@@ -76,65 +74,3 @@ def validate_threadexec(threadexec):
     except ValueError:
         return False
     
-
-def print_traffic_profile(profile):
-    sample_client_data = b64encode(random_string(256).encode()).decode()
-    sample_server_data = b64encode(random_string(128).encode()).decode()
-    
-    DEFAULT_CLIENT_HEADERS['Content-Length'] = len(sample_client_data)
-    DEFAULT_SERVER_HEADERS['Content-Length'] = len(sample_server_data)
-
-    DEFAULT_SERVER_HEADERS['Date'] = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
-
-    # add profile headers to default headers
-    for header, value in profile['listeners']['http']['request_headers'].items():
-        # don't duplicate default headers. Brute will do this filtering
-        # so it's fine to do here (vs in main profile logic)
-        if header.lower() == 'cache-control':
-            DEFAULT_CLIENT_HEADERS['Cache-Control'] = value
-        elif header.lower() == 'content-length':
-            DEFAULT_CLIENT_HEADERS['Content-Length'] = value
-        elif header.lower() == 'host':
-            DEFAULT_CLIENT_HEADERS['Host'] = value
-        else:
-            DEFAULT_CLIENT_HEADERS[header] = value
-
-    if DEFAULT_CLIENT_HEADERS['Host'] == '':
-        DEFAULT_CLIENT_HEADERS['Host'] = profile['listeners']['http']['rotational_host'].split(',')[0]
-        
-        port = profile['listeners']['http']['port']
-        if 'payload_config' in profile.keys():
-            port = profile['payload_config']['http-custom']['port']
-        
-        if port not in ['80', '443']:
-            DEFAULT_CLIENT_HEADERS['Host'] += f':{port}'
-
-    for header, value in profile['listeners']['http']['response_headers'].items():
-        if header.lower() == 'content-length':
-            DEFAULT_SERVER_HEADERS['Content-Length'] = value
-        elif header.lower() == 'content-type':
-            DEFAULT_SERVER_HEADERS['Content-Type'] = value
-        elif header.lower() == 'date':
-            DEFAULT_SERVER_HEADERS['Date'] = value
-        else:
-            DEFAULT_SERVER_HEADERS[header] = value
-
-    uri = profile['listeners']['http']['c2_uri'][0]
-    print()
-    console.print(f'POST /{uri} HTTP/1.1', style='red on default', highlight=False)
-    for header, value in DEFAULT_CLIENT_HEADERS.items():
-        console.print(f'{header}: {value}', style='red on default', highlight=False)
-    console.print()
-    data = profile['listeners']['http']['prepend'] + sample_client_data + profile['listeners']['http']['append']
-    console.print(data, style='red on default', highlight=False)
-    
-    print()
-
-    console.print('HTTP/1.1 200 OK', style='blue on default', highlight=False)
-    for header, value in DEFAULT_SERVER_HEADERS.items():
-        console.print(f'{header}: {value}', style='blue on default', highlight=False)
-    console.print()
-    data = profile['listeners']['http']['prepend_response'] + sample_server_data + profile['listeners']['http']['append_response']
-    console.print(data, style='blue on default', highlight=False)
-
-    print()
