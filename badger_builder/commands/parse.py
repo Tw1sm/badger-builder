@@ -5,7 +5,7 @@ import typer
 import json
 import copy
 
-from badger_builder.logger import logger, init_logger, console
+from badger_builder.logger import init_logger, console
 from badger_builder.lib.utils import DEFAULT_CLIENT_HEADERS, DEFAULT_SERVER_HEADERS, random_string
 
 app = typer.Typer()
@@ -78,7 +78,7 @@ def print_profile(profile):
             else:
                 server_headers[header] = value
 
-    console.print(f'Badger request', style='bold yellow')
+    console.print('Badger request', style='bold yellow')
     uri = profile['c2_uri'][0]
     
     data = ''
@@ -96,7 +96,7 @@ def print_profile(profile):
     console.print(data, style='red on default', highlight=False)
     
     print()
-    console.print(f'Commander response', style='bold yellow')
+    console.print('Commander response', style='bold yellow')
 
     data = ''
     if 'prepend_response' in profile.keys():
