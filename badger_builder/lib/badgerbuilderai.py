@@ -3,7 +3,8 @@ import os
 
 from badger_builder.logger import logger
 
-AI_DO_NOT_USE_LANG = 'Do not use obvious test/sample values, strings and patterns. For example, do not include strings like "example", "test", "sample", "placeholder", "abc" or "123".'
+AI_DO_NOT_USE_LANG = 'Avoid obvious test/sample values or patterns (e.g., "example", "test", "sample", ' \
+                     '"placeholder", "abc", "123"). Separate URIs by a newline.'
 
 
 class BadgerBuilderAI:
@@ -32,10 +33,13 @@ class BadgerBuilderAI:
 
     def uri_query(self):
         logger.info('Querying OpenAI for URIs')
-        query = f'Generate between 4 and 8 HTTP URIs separated by a newline. URIs should being with a slash. Do not include full URLs. All URIs should be at least 2 directories deep. The URI list should contain both files (ending with a common web file extension) and directories. Use only URL safe characters. The URI theme is {self.flavor}. {AI_DO_NOT_USE_LANG}'
-        
+        query =  'Create 4-8 HTTP URIs, each starting with a slash and having at least 2 directories deep. ' \
+                 'Ensure the URIs contain both files (with common web file extensions) and directories, and ' \
+                 f'use only URL-safe characters. The theme is {self.flavor}. {AI_DO_NOT_USE_LANG}' \
+                 'Return only URIs (no list formatting)'
+
         raw_uris = self.openai_query(query)
-        return [uri[1:] for uri in raw_uris.splitlines()]
+        return [uri[1:] if uri.startswith('/') else uri for uri in raw_uris.splitlines()]
 
 
     def http_header_query(self, send_fmt, recv_fmt, client_side=True):
@@ -45,7 +49,10 @@ class BadgerBuilderAI:
         
         logger.info(f'Querying OpenAI for {side} HTTP headers')
 
-        query = f'generate 3-10 HTTP headers for a {side} application that accepts {recv_fmt} and is sending {send_fmt}. Return the headers in valid JSON format (non-final headers should end with a comma). The headers belong to an {self.flavor} themed application. {AI_DO_NOT_USE_LANG} (example: the value of a cookie header should be a legitmate cookie)'
+        query = f'Generate 3-10 HTTP headers for a {side} application accepting {recv_fmt} and sending {send_fmt}. ' \
+                 'Present the headers in valid JSON format, with non-final headers ending in a comma. Headers should ' \
+                 f'relate to a {self.flavor} themed application. {AI_DO_NOT_USE_LANG} Ensure legitimate values (e.g., valid cookie for a cookie header).'
+        
         headers = self.openai_query(query)
         
         # the model seems to like returning JSON prepened by a period and newlne
@@ -59,14 +66,21 @@ class BadgerBuilderAI:
 
         logger.info(f'Querying OpenAI for {side} HTTP body')
         
-        query = f'generate a {side} HTTP body in valid {fmt} format. In a string value of the body, that is most likely to contain a large blob of data, set a single string value to "DataBlobPlaceholder" (camel-cased and no spaces in this string) (there is an equal chance this value is placed anywhere in the body). The body should be between 10 and 40 lines. The HTTP body belongs to an {self.flavor} themed application. {AI_DO_NOT_USE_LANG} (example: the value of a session parameter should be a legitmate session token).'
+        query = f'Create a {side} HTTP body in valid {fmt} format, containing 10-40 lines, for an {self.flavor} themed '\
+                 'application. Replace a string value likely to hold a large data blob with "DataBlobPlaceholder" ' \
+                 f'(camel-cased, no spaces). Place this value randomly within the body. {AI_DO_NOT_USE_LANG} ' \
+                 'Use legitimate values (e.g., valid session token for a session parameter).'
+        
         return self.openai_query(query)
     
 
     def empty_resp_query(self, fmt):
         logger.info('Querying OpenAI for empty HTTP response')
         
-        query = f'generate a HTTP response body in valid {fmt} format that contains a server response to an invalid client request, or client request to a non-existent URI. Provide only the HTTP body, do not provide HTTP headers or any other HTTP response content. The HTTP response belongs to an {self.flavor} themed application. {AI_DO_NOT_USE_LANG}'
+        query = f'Create an HTTP response body in valid {fmt} format for an {self.flavor} themed application, representing ' \
+                 'a server response to an invalid client request or a client request to a non-existent URI. ' \
+                 f'Exclude HTTP headers and other response content. {AI_DO_NOT_USE_LANG}'
+        
         return self.openai_query(query)
 
 
