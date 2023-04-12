@@ -17,4 +17,4 @@ for command in __all__:
     )
 
 if __name__ == '__main__':
-    app(prog_name='c4-profiler')
+    app(prog_name='badger-builder')
