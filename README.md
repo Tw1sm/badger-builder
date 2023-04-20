@@ -51,6 +51,7 @@ poetry export --without-hashes --format=requirements.txt > requirements.txt
 ```
 
 ## Improvements
+- [ ] Option (subcommand?) to provide flags via yaml file
 - [ ] Better/more token efficent OpenAI prompts
 - [ ] DoH/SMB/TCP listener integration
 - [ ] More prepend/append data formats
