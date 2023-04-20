@@ -4,7 +4,7 @@ import os
 from badger_builder.logger import logger
 
 AI_DO_NOT_USE_LANG = 'Avoid obvious test/sample values or patterns (e.g., "example", "test", "sample", ' \
-                     '"placeholder", "abc", "123"). Separate URIs by a newline.'
+                     '"placeholder", "abc", "123").'
 
 
 class BadgerBuilderAI:
@@ -36,7 +36,7 @@ class BadgerBuilderAI:
         query =  'Create 4-8 HTTP URIs, each starting with a slash and having at least 2 directories deep. ' \
                  'Ensure the URIs contain both files (with common web file extensions) and directories, and ' \
                  f'use only URL-safe characters. The theme is {self.flavor}. {AI_DO_NOT_USE_LANG}' \
-                 'Return only URIs (no list formatting)'
+                 'Return only URIs (no list formatting) separated by a newline.'
 
         raw_uris = self.openai_query(query)
         return [uri[1:] if uri.startswith('/') else uri for uri in raw_uris.splitlines()]
