@@ -31,7 +31,7 @@ def main(
     flavor:         str         = typer.Option(..., '--flavor', help='C2 communication flavor. Used to theme OpenAI queries for URIs, headers, HTTP requests', rich_help_panel='Listener Configs'),
     stomp:          str         = typer.Option(None, '--stomp', help='Module stomp a DLL', rich_help_panel='Listener Configs'),
     user_agent:     UserAgent   = typer.Option(..., '--user-agent', help='User-agent to use in comms to the listener', rich_help_panel='Listener Configs', case_sensitive=False),
-    host_header:      str         = typer.Option(..., '--host-header', help='The Host header to use for HTTP requests', rich_help_panel='Listener Configs'),
+    host_header:    str         = typer.Option(..., '--host-header', help='The Host header to use for HTTP requests', rich_help_panel='Listener Configs'),
     auth_count:     int         = typer.Option(1, '--auth-count', help='Number of authentication keys', rich_help_panel='Listener Configs'),
     ota:            bool        = typer.Option(False, '--ota', help='Enable one-time authentication', rich_help_panel='Listener Configs'),
     die:            bool        = typer.Option(False, '--die-offline', help='Kill the payload if internet is unavailable on lanuch', rich_help_panel='Listener Configs'),
@@ -124,6 +124,7 @@ def main(
     listener['os_type'] = 'windows'
 
     # set user-defined configs
+    listener['host'] = bind_host
     listener['port'] = f'{bind_port}'
     listener['sleep'] = sleep
     listener['jitter'] = jitter
@@ -168,10 +169,9 @@ def main(
             break
 
     # remove user-agent and host header if supplied by OpenAI
-    for header in listener['request_headers'].keys():
-        if header.lower() == 'user-agent':
+    for header in listener['request_headers'].copy().keys():
+        if header.lower() in ['user-agent', 'host']:
             del listener['request_headers'][header]
-            break
     
     if host_header:
         listener['request_headers']['host'] = host_header
