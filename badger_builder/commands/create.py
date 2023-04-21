@@ -124,7 +124,6 @@ def main(
     listener['os_type'] = 'windows'
 
     # set user-defined configs
-    listener['host'] = bind_host
     listener['port'] = f'{bind_port}'
     listener['sleep'] = sleep
     listener['jitter'] = jitter
@@ -132,7 +131,6 @@ def main(
     listener['auth_type'] = ota
     listener['die_offline'] = die
     listener['useragent'] = get_ua_string(user_agent)
-    listener['hostheader'] = host_header  
     listener['obfsleep'] = obfsleep.value
     listener['rotational_host'] = ','.join(hosts)
 
@@ -171,8 +169,12 @@ def main(
 
     # remove user-agent and host header if supplied by OpenAI
     for header in listener['request_headers'].keys():
-        if header.lower() == 'user-agent' or header.lower() == 'host':
+        if header.lower() == 'user-agent':
             del listener['request_headers'][header]
+            break
+    
+    if host_header:
+        listener['request_headers']['host'] = host_header
 
     # get server-side response headers
     while True:
