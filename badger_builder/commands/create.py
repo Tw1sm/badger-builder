@@ -54,6 +54,7 @@ def main(
 
     # badger-builder options
     outfile:        Path        = typer.Option('profile.json', '--outfile', file_okay=True, writable=True, help='Output file for the profile', rich_help_panel='Badger Builder Options'),
+    model:          str         = typer.Option('text-davinci-003', '--model', help='OpenAI model to interact with (chosen model may affect cost)',  rich_help_panel='Badger Builder Options'),
     temperature:    float       = typer.Option(1.2, '--temp', help='Temperature for OpenAI GPT-3 queries. Between 0.0 and 2.0. Higher values cause more randomness, while lower are more focused', rich_help_panel='Badger Builder Options'),
     debug:          bool        = typer.Option(False, '--debug', help='Enable debug logging', rich_help_panel='Badger Builder Options')
 ):      
@@ -148,7 +149,7 @@ def main(
 
     # get ChatGPT's input for dynamic configs
     logger.info(f'Querying OpenAI for "{flavor}" flavored listener configs...')
-    badger_ai = BadgerBuilderAI(flavor, temperature)
+    badger_ai = BadgerBuilderAI(flavor, temperature, model)
     
     listener['c2_uri'] = badger_ai.uri_query()
     

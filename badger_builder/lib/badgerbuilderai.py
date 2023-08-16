@@ -9,16 +9,17 @@ AI_DO_NOT_USE_LANG = 'Avoid obvious test/sample values or patterns (e.g., "examp
 
 class BadgerBuilderAI:
 
-    def __init__(self, flavor, temperature):
+    def __init__(self, flavor, temperature, model):
         self.flavor = flavor
         self.temperature = temperature
+        self.model = model
     
 
     def openai_query(self, query, max_tokens=500):
         openai.api_key = os.getenv('OPENAI_API_KEY')
         try:
             response = openai.Completion.create(
-                model='text-davinci-003',
+                model=self.model,
                 prompt=query,
                 temperature=self.temperature,
                 stream=False,
