@@ -6,27 +6,29 @@ from badger_builder.logger import logger
 AI_DO_NOT_USE_LANG = 'Avoid obvious test/sample values or patterns (e.g., "example", "test", "sample", ' \
                      '"placeholder", "abc", "123").'
 
-
 class BadgerBuilderAI:
 
     def __init__(self, flavor, temperature, model):
         self.flavor = flavor
         self.temperature = temperature
         self.model = model
-    
 
     def openai_query(self, query, max_tokens=500):
         openai.api_key = os.getenv('OPENAI_API_KEY')
         try:
-            response = openai.Completion.create(
+            # Adjusting to use the ChatCompletion.create method
+            response = openai.ChatCompletion.create(
                 model=self.model,
-                prompt=query,
+                messages=[
+                    {"role": "system", "content": f"Your role is to assist in generating content themed around {self.flavor}."},
+                    {"role": "user", "content": query}
+                ],
                 temperature=self.temperature,
-                stream=False,
-                max_tokens=max_tokens,
-                n=1
+                max_tokens=max_tokens
             )
-            return response.choices[0]['text'].strip()
+            # Assuming the first completion is what we want.
+            # Note: You might need to adjust how you extract and handle the response based on the actual return structure
+            return response['choices'][0]['message']['content'].strip()
         except Exception as e:
             logger.error(f'Error querying OpenAI - {e}')
             exit(1)
@@ -83,6 +85,3 @@ class BadgerBuilderAI:
                  f'Exclude HTTP headers and other response content. {AI_DO_NOT_USE_LANG}'
         
         return self.openai_query(query)
-
-
-
